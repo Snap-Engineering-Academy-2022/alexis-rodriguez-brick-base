@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -38,15 +38,15 @@ function App() {
     .catch(error => console.log('error', error));
   };
   
-  function handleButtonClick(){
-    fetch("https://rebrickable.com/api/v3/lego/sets/?min_year=2010&key=5e7031f029b2bf1cc237413ff2e599fc", requestOptions)
-    .then(response => response.json())
-    .then(response => {
-      console.log(response.results); 
-      setHouseData(response.results)
-    })
-    .catch(error => console.log('error', error));
-  }
+  // function handleButtonClick(){
+  //   fetch("https://rebrickable.com/api/v3/lego/sets/?min_year=2010&key=5e7031f029b2bf1cc237413ff2e599fc", requestOptions)
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     console.log(response.results); 
+  //     setHouseData(response.results)
+  //   })
+  //   .catch(error => console.log('error', error));
+  // }
 
   console.log(searchBarResult);
 
