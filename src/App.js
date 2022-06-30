@@ -53,13 +53,13 @@ function App() {
   return (
     <div className="App">
       <CssBaseline />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{backgroundColor: '#ffe330'}}>
         <Grid container direction="column" justifyContent="center" alignItems="center">
           <Grid item>
               <Typography
                 variant="h2"
                 color="text.primary"
-                // sx={{ py: 0}}
+                sx={{ m: 2}}
               >
                 Brick Base
               </Typography>
@@ -78,7 +78,7 @@ function App() {
               <Box
                 component="form"
                 sx={{
-                  '& > :not(style)': { my: 3, width: '25ch' },
+                  '& > :not(style)': { width: '25ch' },
                 }}
                 noValidate
                 autoComplete="off"
