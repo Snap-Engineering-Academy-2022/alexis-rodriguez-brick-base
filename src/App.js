@@ -1,112 +1,118 @@
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
+import React, { useState } from 'react';
+import './App.css';
+// import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import './App.css';
-// import characters from './protagonists.json'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import LegoSetCard from './components/LegoSetCard';
+
+
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "__cflb=0H28vzNcsA143GW52FyVXZfrjruJ6kaTWMvkTQ8Ds79");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+
 
 function App() {
+  
+  const [houseData, setHouseData] = useState(null);
+  const [searchBarResult, setSearchBarResult] = useState("")
+
+  const handleChange = (event) => {
+    setSearchBarResult(event.target.value);
+    fetch("https://rebrickable.com/api/v3/lego/sets/?search=" + searchBarResult + "&key=5e7031f029b2bf1cc237413ff2e599fc", requestOptions)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response.results); 
+      setHouseData(response.results)
+    })
+    .catch(error => console.log('error', error));
+  };
+  
+  // function handleButtonClick(){
+  //   fetch("https://rebrickable.com/api/v3/lego/sets/?min_year=2010&key=5e7031f029b2bf1cc237413ff2e599fc", requestOptions)
+  //   .then(response => response.json())
+  //   .then(response => {
+  //     console.log(response.results); 
+  //     setHouseData(response.results)
+  //   })
+  //   .catch(error => console.log('error', error));
+  // }
+
+  console.log(searchBarResult);
+
   return (
     <div className="App">
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: '1px solid lightgray' }}
-      >
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Characters Inc
-          </Typography>
-          <Button 
-            href="#" 
-            variant="outlined" 
-            sx={{ my: 1, mx: 1.5 }}
-            onClick={() => alert("Boop!")}
-          >
-            Button
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="md" sx={{ my: 4}}>
-        <Typography
-          variant="h2"
-          align="center"
-          color="text.primary"
-          sx={{ py: 2}}
-        >
-          Prevalent Protagonists
-        </Typography>
-        <Typography 
-          variant="h5" 
-          align="center" 
-          color="text.secondary"
-          sx={{ mx: 10 }}
-        >
-          Hmm, seems like we're missing some of the other protagonists.
-        </Typography>
+      <Container maxWidth="lg" sx={{backgroundColor: '#ffe330'}}>
+        <Grid container direction="column" justifyContent="center" alignItems="center">
+          <Grid item>
+              <Typography
+                variant="h2"
+                color="text.primary"
+                sx={{ m: 2}}
+              >
+                Brick Base
+              </Typography>
+          </Grid>
+          {/* <Grid item>
+              <Button 
+                  href="#" 
+                  variant="outlined" 
+                  sx={{ color: 'black', borderColor: 'black', my: 2}}
+                  onClick={() => handleButtonClick()}
+                >
+                FETCH
+              </Button>
+          </Grid> */}
+          <Grid item>
+              <Box
+                component="form"
+                sx={{
+                  '& > :not(style)': { width: '25ch' },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  id="outlined-name"
+                  label="Search"
+                  value={searchBarResult}
+                  onChange={handleChange}
+                />
+              </Box>
+          </Grid>
+        </Grid>
       </Container>
-      {/* End hero unit */}
+
+
       <Container maxWidth="lg">
         <Grid container 
           spacing={5} 
           justifyContent="center"
           alignItems="flex-start"
         >
-          <Grid
-            item
-            xs={12}
-            md={4}
-          >
-            <Card>
-              <CardMedia
-                component="img"
-                height="350px"
-                image={"https://i.imgur.com/56chgMj.png"}
-              />
-              <CardHeader
-                title={"Miles Morales"}
-                titleTypographyProps={{ align: 'center' }}
-                sx={{ mt: 1 }}
-              />
-              <CardContent sx={{ pt: 0 }}>
-                <ul>
-                    <Typography component="li">
-                      Definitely Not Spiderman
-                    </Typography>
-                    <Typography component="li">
-                      "Lanky Puberty Boy" vibes
-                    </Typography>
-                    <Typography component="li">
-                      Can't do it on demand
-                    </Typography>
-                    <Typography component="li">
-                      Elite music taste
-                    </Typography>
-                </ul>
-              </CardContent>
-              <CardActions>
-                <Button 
-                  variant="contained"
-                  sx={{ px: 6, mx: 'auto' }}
-                  // I'm trying to use custom CSS defined in the file App.css,
-                  // but it isn't working. Why, and how can I fix it?
-                  className="characterButton"
-                >
-                  Vote
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
+          {
+            houseData && houseData.map((object) => {
+              return <Grid
+                        item
+                        xs={12}
+                        md={4}
+                      >
+                        <LegoSetCard setName={object.name} setNum={object.set_num} image={object.set_img_url} setYear={object.year} numOfPieces={object.num_parts} />
+                      </Grid>
+              }
+            )
+          }
         </Grid>
       </Container>
     </div>
